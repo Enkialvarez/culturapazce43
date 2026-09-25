@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#6e1423">
+<title>Protocolos de Seguridad — Plantel EMS (Morelos)</title>
+<style>
+  :root{
+    --guinda:#6e1423; --guinda2:#8f1d33; --guinda-claro:#b23a4d;
+    --gris:#f4f1f2; --gris2:#e5dee0; --texto:#2b2325; --blanco:#ffffff;
+    --verde:#1e7d32; --amarillo:#f9a825; --rojo:#c62828;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--gris);color:var(--texto);font-size:17px;}
+  header{position:sticky;top:0;z-index:50;background:var(--guinda);color:#fff;padding:10px 14px;box-shadow:0 2px 6px rgba(0,0,0,.25);}
+  header h1{margin:0;font-size:1.05rem;letter-spacing:.3px;}
+  header .sub{font-size:.75rem;opacity:.85;}
+  #semaforoBar{display:flex;align-items:center;gap:10px;margin-top:8px;}
+  .sem{display:flex;border-radius:20px;overflow:hidden;border:2px solid rgba(255,255,255,.6);}
+  .sem button{border:0;padding:8px 14px;font-weight:bold;font-size:.8rem;cursor:pointer;color:#fff;background:#555;}
+  .sem button.on-v{background:var(--verde);} .sem button.on-a{background:var(--amarillo);color:#3a2c00;} .sem button.on-r{background:var(--rojo);}
+  #semLabel{font-size:.85rem;font-weight:bold;}
+  main{padding:14px 14px 90px;max-width:720px;margin:0 auto;}
+  .btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+  @media(min-width:560px){.btn-grid{grid-template-columns:1fr 1fr 1fr;}}
+  .btn-emerg{background:var(--blanco);border-left:8px solid var(--guinda);border-radius:12px;padding:18px 12px;font-size:1rem;font-weight:bold;text-align:left;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,.12);min-height:84px;display:flex;align-items:center;gap:8px;line-height:1.2;}
+  .btn-emerg:active{transform:scale(.97);}
+  .btn-emerg .ico{font-size:1.5rem;}
+  .call911{display:block;background:var(--rojo);color:#fff;text-align:center;font-size:1.4rem;font-weight:800;padding:16px;border-radius:14px;text-decoration:none;margin:14px 0;box-shadow:0 3px 8px rgba(92,26,36,.25);border:1px solid rgba(255,255,255,.25);}
+  .call911:active{transform:scale(.98);}
+  h2.sec{font-size:1.25rem;color:var(--guinda);margin:22px 0 6px;border-bottom:3px solid var(--guinda);padding-bottom:4px;}
+  ol.steps{margin:0;padding-left:0;list-style:none;counter-reset:paso;}
+  ol.steps li{counter-increment:paso;background:#fff;border-radius:10px;padding:12px 12px 12px 52px;margin-bottom:10px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,.08);line-height:1.45;font-size:1.02rem;}
+  ol.steps li::before{content:counter(paso);position:absolute;left:10px;top:10px;width:32px;height:32px;border-radius:50%;background:var(--guinda);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:1.05rem;}
+  ol.steps.seg li::before{background:#4a4a4a;}
+  .tabs{display:flex;gap:6px;margin:14px 0;}
+  .tabs button{flex:1;padding:14px;border:0;border-radius:10px;font-size:1.05rem;font-weight:bold;background:var(--gris2);color:var(--texto);cursor:pointer;}
+  .tabs button.activo{background:var(--guinda);color:#fff;}
+  .nota{background:#fff8e1;border-left:6px solid var(--amarillo);padding:10px 12px;border-radius:8px;margin:10px 0;font-size:.95rem;line-height:1.4;}
+  nav#menu{position:fixed;bottom:0;left:0;right:0;background:var(--guinda);display:flex;z-index:50;box-shadow:0 -2px 8px rgba(0,0,0,.25);}
+  nav#menu button{flex:1;background:none;border:0;color:#e8cdd3;padding:10px 2px 12px;font-size:.68rem;font-weight:bold;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;}
+  nav#menu button .mi{font-size:1.3rem;}
+  nav#menu button.activo{color:#fff;background:var(--guinda2);}
+  .card{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+  input,select,textarea{width:100%;padding:13px;border:2px solid var(--gris2);border-radius:10px;font-size:1rem;margin-bottom:10px;font-family:inherit;}
+  input:focus,select:focus,textarea:focus{border-color:var(--guinda);outline:none;}
+  label{font-weight:bold;font-size:.9rem;display:block;margin-bottom:4px;color:var(--guinda);}
+  .btn-g{background:var(--guinda);color:#fff;border:0;padding:15px 20px;border-radius:10px;font-size:1rem;font-weight:bold;cursor:pointer;width:100%;}
+  .btn-g:active{transform:scale(.98);}
+  .btn-s{background:#fff;color:var(--guinda);border:2px solid var(--guinda);padding:12px 16px;border-radius:10px;font-weight:bold;cursor:pointer;font-size:.95rem;}
+  .btn-peligro{background:#fff;color:var(--rojo);border:2px solid var(--rojo);padding:8px 12px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:.85rem;}
+  .tel-row{display:flex;align-items:center;gap:10px;background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+  .tel-row .num{flex:1;}
+  .tel-row .num b{font-size:1.1rem;color:var(--guinda);}
+  .tel-row .num small{display:block;color:#666;font-size:.8rem;}
+  a.llamar{background:#2e7d4f;color:#fff;text-decoration:none;font-weight:800;padding:12px 18px;border-radius:10px;white-space:nowrap;}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;}
+  th,td{border:1px solid var(--gris2);padding:8px;text-align:left;}
+  th{background:var(--guinda);color:#fff;}
+  .volver{background:none;border:0;color:#fff;font-size:1rem;font-weight:bold;cursor:pointer;padding:4px 0 8px;}
+  .empty{color:#777;text-align:center;padding:20px;font-style:italic;}
+  .pill{display:inline-block;background:var(--gris2);border-radius:12px;padding:3px 10px;font-size:.78rem;font-weight:bold;margin-right:4px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🛡️ Protocolos de Seguridad del Plantel</h1>
+  <div class="sub">Educación Media Superior · SEP / Subsecretaría EMS 2023 · Morelos</div>
+  <div id="semaforoBar">
+    <div class="sem" id="semCtrl">
+      <button data-s="verde" onclick="setSemaforo('verde')">VERDE</button>
+      <button data-s="amarillo" onclick="setSemaforo('amarillo')">AMARILLO</button>
+      <button data-s="rojo" onclick="setSemaforo('rojo')">ROJO</button>
+    </div>
+    <span id="semLabel"></span>
+  </div>
+</header>
+<main id="vista"></main>
+<nav id="menu">
+  <button data-v="inicio" onclick="go('inicio')"><span class="mi">🏠</span>Inicio</button>
+  <button data-v="directorio" onclick="go('directorio')"><span class="mi">📞</span>Emergencias</button>
+  <button data-v="red" onclick="go('red')"><span class="mi">🤝</span>Red de Seguridad</button>
+  <button data-v="cedulas" onclick="go('cedulas')"><span class="mi">🪪</span>Cédulas</button>
+  <button data-v="bitacora" onclick="go('bitacora')"><span class="mi">📋</span>Bitácora</button>
+</nav>
+
+<script>
+/* ================= DATOS DE CONTINGENCIAS =================
+   Pasos adaptados del documento "Protocolos de Seguridad para los
+   Planteles Federales de Educación Media Superior" (SEP, 2023),
+   en lenguaje sencillo para lectura rápida bajo estrés. */
+const CONTINGENCIAS = [
+ {id:"accidente", ico:"🩹", nombre:"Accidente o lesión en el plantel",
+  nota:"Primero evalúa: la lesión es leve o grave.",
+  actuacion:[
+   "Avisa de inmediato al personal directivo o a otro compañero para que lo avise.",
+   "Evalúa la lesión: ¿es leve o grave?",
+   "SI ES LEVE: da primeros auxilios. No requiere atención médica. La o el estudiante regresa al salón.",
+   "SI ES GRAVE: llama al 911 o a la autoridad local competente.",
+   "Llama a la madre, padre o tutor de la o el estudiante.",
+   "Da a los paramédicos información completa de cómo sucedió el accidente.",
+   "Anota el nombre del hospital de traslado.",
+   "Una persona del personal directivo se traslada al hospital para apoyar a la familia."
+  ],
+  seguimiento:[
+   "Da seguimiento al estado de salud de la o el estudiante lesionado.",
+   "Asesora a la familia sobre el seguro contra accidentes escolares.",
+   "Si es posible, ofrece atención psicosocial (orientación educativa y/o psicología) dentro del plantel, a estudiantes o personal afectado.",
+   "Si requiere hospitalización o consultas médicas, coordina con docentes el apoyo para recalendarizar exámenes y tareas."
+  ]},
+ {id:"viaje", ico:"🚌", nombre:"Accidente en viaje escolar",
+  actuacion:[
+   "Verifica si las y los estudiantes están bien.",
+   "Identifica quiénes resultaron lesionados e infórmalo al personal escolar responsable.",
+   "NO muevas a la persona lesionada.",
+   "Espera a los paramédicos o autoridades para que determinen la gravedad de las lesiones.",
+   "Entrega a los paramédicos la ficha del estudiante (nombre, tipo de sangre, enfermedades y alergias).",
+   "Contacta de inmediato a las madres y padres o tutores de las y los estudiantes lesionados; también avisa a los familiares del personal lesionado.",
+   "En caso de fallecimiento, contacta a la familia y a las autoridades correspondientes.",
+   "Designa al personal responsable que apoye en la contingencia y reporte acciones.",
+   "Da información veraz y oportuna a las familias sobre el hospital de traslado o atención recibida.",
+   "Contacta a la empresa de transporte para hacer efectivo el seguro, si se requiere.",
+   "Asegúrate de que el resto del estudiantado regrese al plantel con el personal docente."
+  ],
+  seguimiento:[
+   "Haz seguimiento al estado de salud de lesionados y hospitalizados.",
+   "Entrega justificante escolar con base en constancia médica para regularizar actividades académicas.",
+   "Verifica que el seguro de viaje se haga efectivo y los trámites de indemnización avancen.",
+   "Coordina con docentes la recalendarización de exámenes y tareas.",
+   "Informa a tu autoridad superior mediante informe escrito y telefónico."
+  ]},
+ {id:"suicidio", ico:"💚", nombre:"Intento de suicidio",
+  nota:"Si hay riesgo inminente: llama al 911 y a la Línea de la Vida 800 911 2000. NUNCA dejes sola a la persona.",
+  actuacion:[
+   "Avisa de inmediato al personal directivo o escolar.",
+   "Busca apoyo de los servicios de emergencia y atención psicológica para evitar que se consuma el intento.",
+   "Sigue las instrucciones del personal directivo o escolar responsable.",
+   "Si la persona resultó con lesiones leves, brinda primeros auxilios; si está grave, llama al 911 y pide una ambulancia.",
+   "Si es posible moverla, llévala a una oficina de Dirección que ofrezca total discreción.",
+   "Contacta a la madre, padre o tutor para que llegue lo antes posible.",
+   "Acompáñala en todo momento hasta que llegue la familia o los servicios de emergencia.",
+   "Sugiere a la familia buscar médicos especialistas que ayuden a su hija o hijo.",
+   "Anota los datos de la institución de salud pública a la que fue canalizada.",
+   "Mantén al estudiantado en un área separada del sitio de la contingencia (área definida previamente en la Estrategia)."
+  ],
+  seguimiento:[
+   "Haz seguimiento de la canalización mediante el servicio de orientación educativa del plantel.",
+   "Coordina con docentes la recalendarización de tareas y exámenes.",
+   "Informa a tu autoridad superior con informe escrito y telefónico.",
+   "Contempla atención psicosocial por especialistas dentro del plantel.",
+   "Realiza actividades de sensibilización con el estudiantado, con acompañamiento de personas expertas, para prevenir sucesos similares."
+  ]},
+ {id:"armas", ico:"🔫", nombre:"Uso o portación de armas de fuego",
+  nota:"Si hay alarma: resguárdate, recuéstate boca abajo lejos de puertas y ventanas, en silencio y con el celular apagado. NO grabes.",
+  actuacion:[
+   "Si observas a una persona armada dentro del plantel: avisa con prontitud y prudencia al personal directivo usando el código preestablecido.",
+   "Mantén a las y los estudiantes dentro de las aulas hasta nuevo aviso.",
+   "Instruye al estudiantado: recostarse boca abajo en el piso, lejos de puertas y ventanas, en silencio, celular apagado.",
+   "Apaga las luces del salón.",
+   "Deja entrar con precaución a quienes estaban fuera al momento del aviso.",
+   "Cierra la puerta con llave o atrancarla con el escritorio o sillas.",
+   "Haz pase de lista de las y los estudiantes.",
+   "Procura mantener calmados a las y los estudiantes, especialmente a quienes tengan crisis nerviosas.",
+   "Informa por celular u otro medio si alguien fue herido y necesita apoyo médico.",
+   "Atiende las necesidades de apoyo emocional de la comunidad educativa."
+  ],
+  seguimiento:[
+   "Notifica a toda la comunidad educativa, por el medio definido, que es seguro salir — solo cuando la policía y los servicios de emergencia lo determinen.",
+   "Llama a las madres y padres o tutores para que recojan a sus hijas e hijos.",
+   "Haz seguimiento a estudiantes con crisis nerviosas; canaliza a ayuda psicológica si es necesario.",
+   "Informa a tu autoridad superior con informe escrito, telefónico o medio electrónico documentado.",
+   "Haz control de daños en infraestructura (vidrios, puertas, etc.).",
+   "Si hubo personas heridas o fallecidas, brinda todo el apoyo a las afectadas y da vista a las autoridades competentes (seguridad pública, ministerio público)."
+  ]},
+ {id:"enfrentamiento", ico:"⚠️", nombre:"Enfrentamiento con armas en los alrededores",
+  nota:"NO evacúes el plantel por ningún motivo. Mantén los accesos cerrados.",
+  actuacion:[
+   "Lo primero es salvaguardar la vida de la comunidad educativa.",
+   "Actúa con prontitud: eficaz, rápida, no precipitada, siguiendo el plan previamente ensayado.",
+   "Da la señal de alarma y verifica que todos comprendan qué significa.",
+   "Contacta al 911 o a la autoridad local competente.",
+   "Mantén comunicación con el exterior y los servicios de emergencia para conocer la evolución de los hechos.",
+   "Informa a quienes están dentro del plantel sobre la situación.",
+   "Si alguien resulta herido, da primeros auxilios y mantenlo recostado; espera a que sea seguro para atenderlo.",
+   "NO evacúes el plantel por ningún motivo y mantén cerrados los accesos.",
+   "Contacta a las madres y padres o tutores de las y los estudiantes."
+  ],
+  seguimiento:[
+   "Notifica por micrófono a todo el plantel que es seguro salir, cuando las fuerzas de seguridad y emergencia lo determinen.",
+   "Haz seguimiento a estudiantes canalizados a instituciones públicas de salud médica o psicológica.",
+   "Explica con detalle a las y los estudiantes a dónde serán canalizados y enfatiza que se buscará a su familia para informarle dónde encontrarlas.",
+   "Haz recuento de daños en infraestructura y equipamiento, y presenta denuncia ante la autoridad ministerial competente.",
+   "Evalúa en Honores a la Bandera (o evento ex profeso) la participación de la comunidad, destacando comportamiento ético y valores."
+  ]},
+ {id:"fuerzas", ico:"🚔", nombre:"Despliegue de fuerzas militares o policiacas",
+  actuacion:[
+   "Da la señal de alarma y verifica que la comunidad comprenda qué significa.",
+   "Evita correr, en caso de que se presente un tiroteo.",
+   "Instruye cerrar las puertas del plantel.",
+   "Contacta a la autoridad competente para conocer la situación.",
+   "Acatar las indicaciones que precisen las fuerzas de seguridad cuando arriben.",
+   "Mantén comunicación con el exterior y los servicios de emergencia.",
+   "Informa a quienes están dentro del plantel sobre la situación.",
+   "Si alguien resulta herido, da primeros auxilios y mantenlo recostado; espera a que sea seguro para atenderlo.",
+   "NO evacúes el plantel por ningún motivo."
+  ],
+  seguimiento:[
+   "Notifica por micrófono a todo el plantel que es seguro salir, cuando las fuerzas de seguridad y emergencia lo determinen.",
+   "Haz seguimiento a estudiantes canalizados a instituciones públicas de salud médica o psicológica.",
+   "Haz recuento de daños en infraestructura y equipamiento, y presenta denuncia ante la autoridad ministerial competente.",
+   "Informa a tu autoridad superior con informe escrito y telefónico."
+  ]},
+ {id:"drogas", ico:"🍾", nombre:"Consumo de alcohol y drogas en el plantel",
+  actuacion:[
+   "Informa al personal directivo o escolar sobre la situación.",
+   "Acompaña en todo momento a la o el estudiante.",
+   "Contacta a la madre, padre o tutor para que llegue lo antes posible.",
+   "Llénala a una oficina de Dirección que ofrezca total discreción.",
+   "Contacta a las autoridades competentes, si se considera necesario.",
+   "Informa a la o el estudiante y a su familia sobre la sanción correspondiente, que debe ser compatible con la dignidad humana.",
+   "Sugiere a la familia buscar apoyo médico especializado.",
+   "Proporciona datos de instituciones de salud pública para canalizar en caso de alta dependencia al alcohol o drogas.",
+   "Anota los datos del familiar que se responsabiliza de la o el estudiante."
+  ],
+  seguimiento:[
+   "Ofrece atención psicosocial por especialistas en orientación educativa y/o psicología dentro del plantel; en alta dependencia, canaliza a unidad especializada de salud.",
+   "Si se establece esquema de citas médicas, la o el estudiante debe asistir a todas.",
+   "Coordina con docentes el apoyo en tareas y exámenes según el esquema de citas.",
+   "Participa en talleres o actividades para tomar decisiones responsables.",
+   "NO estigmatices los casos.",
+   "Apoya a compañeras y compañeros para mantenerse al tanto de actividades cuando haya inasistencias por salud.",
+   "Pide comprobante de asistencia a servicios de prevención y/o tratamiento, incluida su finalización."
+  ]},
+ {id:"robo", ico:"🎒", nombre:"Robo o desaparición de objetos",
+  nota:"Si el asaltante está armado y en flagrancia: no discutas, no lo desarmes, sigue sus demandas y no lo provoques.",
+  actuacion:[
+   "SITUACIÓN A — Asaltante armado en flagrancia: evita discutir, sigue sus demandas, no intentes desarmarlo, explica que puede llevarse las cosas materiales y ordena a la comunidad permanecer en los salones en silencio. Da la señal de alarma.",
+   "SITUACIÓN B — Sin flagrancia (horario escolar): llama a la policía o autoridades competentes. Las revisiones e inspecciones solo se hacen para evitar riesgo, cuidando la integridad, intimidad e interés superior de las y los menores.",
+   "SITUACIÓN C — Hay testigos y el asaltante ya no está: toma testimonio de cómo era y dónde se le vio. Entrégalo a la policía al llegar, cuidando el anonimato y confidencialidad.",
+   "SITUACIÓN D — Fuera de horario escolar: NO toques nada, evita el ingreso de estudiantes o integrantes de la comunidad, cierra todas las salidas y espera a las autoridades de seguridad pública.",
+   "Haz recuento de daños en infraestructura y equipamiento."
+  ],
+  seguimiento:[
+   "Contacta a los servicios de emergencia y atención ciudadana o autoridad competente.",
+   "Levanta acta de hechos con circunstancias de modo, tiempo y lugar.",
+   "Notifica por micrófono que es seguro salir, cuando las autoridades lo determinen.",
+   "Informa de inmediato a las familias de las y los estudiantes.",
+   "Presenta denuncia ante la autoridad ministerial competente por daños.",
+   "Informa a tu autoridad superior con informe escrito y telefónico."
+  ]},
+ {id:"bomba", ico:"💣", nombre:"Amenaza de bomba",
+  nota:"Toda amenaza se atiende como si fuera CIERTA. Nunca la tomes a la ligera. Actúa con calma y sin pánico.",
+  actuacion:[
+   "Atiende de inmediato cualquier aviso o amenaza de bomba o artefacto explosivo.",
+   "Si recibes la amenaza: escucha con atención — timbre de voz, sexo, nerviosismo o risa, si hay más personas de fondo. Recaba toda la información posible.",
+   "En la medida posible, registra el número de quien llama (identificador de llamadas).",
+   "Llama a la policía y/o bomberos y dales todos los detalles obtenidos.",
+   "Sigue las indicaciones de la autoridad.",
+   "Instruye a todo el plantel para que apaguen sus celulares y radios: estas señales pueden activar el explosivo.",
+   "Por ningún motivo te acerques al área del objeto sospechoso, hasta que las instancias de seguridad lo retiren.",
+   "Evacúa el plantel por las rutas previamente establecidas para esta emergencia."
+  ],
+  seguimiento:[
+   "Evalúa continuar o suspender clases, una vez que los equipos de emergencia determinen que el plantel está seguro.",
+   "Refuerza la seguridad del plantel en lugares aislados o con poca vigilancia.",
+   "Informa e involucra a las familias en actividades del plantel relacionadas con la cultura de paz.",
+   "Informa a tu autoridad superior con informe escrito y telefónico.",
+   "Ofrece atención psicosocial dentro del plantel a estudiantes o personal afectado emocionalmente."
+  ]},
+ {id:"crisis", ico:"🧠", nombre:"Crisis nerviosa",
+  nota:"Una crisis nerviosa es una reacción intensa de angustia (llanto, hiperventilación, temblores) ante un evento. Mantén la calma tú primero.",
+  actuacion:[
+   "Acércate con calma y habla en voz suave y baja.",
+   "Acompáñala en todo momento; no la dejes sola.",
+   "Aléjala del sitio que provoca la crisis, a un lugar tranquilo y discreto.",
+   "Ayúdala a respirar lento: inhala 4 segundos, sostén 2, exhala 4. Repite.",
+   "Avisa al personal directivo o escolar.",
+   "Contacta a la madre, padre o tutor para que llegue al plantel.",
+   "Si no cede, llama al 911 o a los servicios de emergencia y atención ciudadana.",
+   "Anota los datos de la institución de salud a la que sea trasladada, si aplica.",
+   "Si hubo un evento traumático (armas, robo, etc.), mantén al estudiantado en un área separada y atiende el apoyo emocional de la comunidad."
+  ],
+  seguimiento:[
+   "Haz seguimiento al estudiante: canalízalo con orientación educativa y/o psicología dentro del plantel.",
+   "Si es necesario, canalízalo a instituciones de salud pública para recibir ayuda psicológica.",
+   "Coordina con docentes la recalendarización de tareas y exámenes si tuvo que ausentarse.",
+   "Informa a tu autoridad superior con informe escrito y telefónico, si derivó de una contingencia.",
+   "Brinda atención psicosocial a todo el grupo o personal afectado por el evento original."
+  ]}
+];
+
+/* ============ NÚMEROS DE EMERGENCIA (Morelos, verificados) ============
+   Fuentes: Coordinación Estatal de Protección Civil Morelos (morelos.gob.mx),
+   Servicios de Salud de Morelos / CONASAMA, SSPC Morelos. EDITABLES por el personal. */
+const DEFAULT_DIRECTORIO = [
+ {nombre:"Emergencias (policía, bomberos, ambulancia)", num:"911"},
+ {nombre:"Protección Civil Morelos — emergencias", num:"+527771000515", texto:"(777) 100-0515 y 17"},
+ {nombre:"Protección Civil Morelos — oficinas", num:"+527771000514", texto:"(777) 100-0514 y 18"},
+ {nombre:"Línea de la Vida (crisis y salud mental, 24 h, nacional)", num:"8009112000", texto:"800 911 2000"},
+ {nombre:"Línea estatal de apoyo emocional Morelos", num:"8002322342", texto:"800 232 2342"},
+ {nombre:"Denuncia anónima", num:"089"},
+ {nombre:"Cruz Roja Cuernavaca", num:"+527773153505", texto:"(777) 315-3505"},
+ {nombre:"Bomberos Cuernavaca — Estación Central", num:"+527773228753", texto:"(777) 322-8753"},
+ {nombre:"SSPC Morelos — emergencias / denuncia", num:"911", texto:"911 y 089"}
+];
+
+const GRUPOS = ["Personal directivo","Personal escolar","Madres y padres de familia","Estudiantado"];
+const TIPOS = CONTINGENCIAS.map(c=>c.nombre);
+
+/* ================= ALMACENAMIENTO LOCAL ================= */
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+};
+let directorio = LS.get("dir", DEFAULT_DIRECTORIO);
+let red = LS.get("red", []);
+let cedulas = LS.get("ced", []);
+let bitacora = LS.get("bit", []);
+let semaforo = LS.get("sem", "verde");
+let contId = null; // contingencia abierta
+let tabActivo = "act";
+
+const $ = s => document.querySelector(s);
+const vista = $("#vista");
+
+/* ================= SEMÁFORO ================= */
+function pintarSemaforo(){
+  document.querySelectorAll("#semCtrl button").forEach(b=>{
+    b.className = "";
+    if(b.dataset.s === semaforo) b.className = "on-" + semaforo[0];
+  });
+  const txt = {verde:"Todo en orden", amarillo:"Precaución", rojo:"Emergencia activa"};
+  $("#semLabel").textContent = "● " + txt[semaforo];
+  $("#semLabel").style.color = {verde:"#8ef0a0",amarillo:"#ffe082",rojo:"#ff8a80"}[semaforo];
+}
+function setSemaforo(s){ semaforo = s; LS.set("sem", s); pintarSemaforo(); }
+
+/* ================= NAVEGACIÓN ================= */
+function go(v, id){
+  contId = (v === "contingencia") ? id : null;
+  document.querySelectorAll("nav#menu button").forEach(b=>{
+    b.classList.toggle("activo", b.dataset.v === v || (v==="contingencia" && b.dataset.v==="inicio"));
+  });
+  if(v==="inicio") renderInicio();
+  else if(v==="contingencia") renderContingencia(id);
+  else if(v==="directorio") renderDirectorio();
+  else if(v==="red") renderRed();
+  else if(v==="cedulas") renderCedulas();
+  else if(v==="bitacora") renderBitacora();
+  window.scrollTo(0,0);
+}
+
+/* ================= INICIO ================= */
+function renderInicio(){
+  vista.innerHTML = `
+    <a class="call911" href="tel:911">📞 LLAMAR AL 911</a>
+    <h2 class="sec">¿Qué está pasando? Elige el tipo de contingencia</h2>
+    <div class="btn-grid">
+      ${CONTINGENCIAS.map(c=>`<button class="btn-emerg" onclick="go('contingencia','${c.id}')"><span class="ico">${c.ico}</span>${c.nombre}</button>`).join("")}
+    </div>
+    <div class="nota" style="margin-top:18px">
+      📌 Los datos se guardan <b>solo en este dispositivo</b> (funciona sin internet).
+      Verifica y actualiza los números de emergencia de tu localidad en la pestaña <b>📞 Emergencias</b>.
+    </div>`;
+}
+
+/* ================= CONTINGENCIA ================= */
+function renderContingencia(id){
+  const c = CONTINGENCIAS.find(x=>x.id===id);
+  const pasos = tabActivo==="act" ? c.actuacion : c.seguimiento;
+  vista.innerHTML = `
+    <button class="volver" onclick="go('inicio')">← Volver al inicio</button>
+    <a class="call911" href="tel:911">📞 LLAMAR AL 911</a>
+    <h2 class="sec">${c.ico} ${c.nombre}</h2>
+    ${c.nota ? `<div class="nota">${c.nota}</div>` : ""}
+    <div class="tabs">
+      <button class="${tabActivo==='act'?'activo':''}" onclick="tabActivo='act';renderContingencia('${id}')">🚨 Actuación</button>
+      <button class="${tabActivo==='seg'?'activo':''}" onclick="tabActivo='seg';renderContingencia('${id}')">🔁 Seguimiento</button>
+    </div>
+    <ol class="steps ${tabActivo==='seg'?'seg':''}">
+      ${pasos.map(p=>`<li>${p}</li>`).join("")}
+    </ol>
+    <div class="card" style="text-align:center">
+      <a class="btn-s" href="tel:911">📞 911</a>
+      <a class="btn-s" href="tel:8009112000" style="margin-left:8px">💚 Línea de la Vida 800 911 2000</a>
+    </div>
+    <button class="btn-g" onclick="go('bitacora','${c.nombre}')">➕ Registrar esta contingencia en la Bitácora</button>`;
+}
+
+/* ================= DIRECTORIO DE EMERGENCIAS ================= */
+function renderDirectorio(){
+  vista.innerHTML = `
+    <h2 class="sec">📞 Directorio de Emergencias</h2>
+    <div class="nota">Números verificados de Morelos (Protección Civil estatal, Servicios de Salud Morelos, SSPC). <b>Edítalos</b> para tu municipio: cada plantel debe tener su propio directorio.</div>
+    <div id="listaDir">
+      ${directorio.map((d,i)=>`
+        <div class="tel-row">
+          <div class="num"><b>${d.texto||d.num}</b><small>${d.nombre}</small></div>
+          <a class="llamar" href="tel:${d.num}">Llamar</a>
+          <button class="btn-peligro" onclick="editarDir(${i})">✏️</button>
+        </div>`).join("")}
+    </div>
+    <div class="card">
+      <label>Nombre del servicio</label>
+      <input id="dNom" placeholder="Ej. Protección Civil municipal">
+      <label>Número</label>
+      <input id="dNum" placeholder="Ej. 7771234567 o 911" inputmode="tel">
+      <button class="btn-g" onclick="agregarDir()">➕ Agregar contacto</button>
+    </div>`;
+}
+function agregarDir(){
+  const n = $("#dNom").value.trim(), t = $("#dNum").value.trim();
+  if(!n || !t){ alert("Escribe el nombre y el número."); return; }
+  directorio.push({nombre:n, num:t, texto:t});
+  LS.set("dir", directorio); renderDirectorio();
+}
+function editarDir(i){
+  const d = directorio[i];
+  const n = prompt("Nombre del servicio:", d.nombre); if(n===null) return;
+  const t = prompt("Número (solo dígitos, sin espacios):", d.num); if(t===null) return;
+  if(n.trim()==="" ) { if(confirm("¿Eliminar este contacto?")){ directorio.splice(i,1); LS.set("dir",directorio); renderDirectorio(); } return; }
+  directorio[i] = {nombre:n.trim(), num:t.trim(), texto:t.trim()};
+  LS.set("dir", directorio); renderDirectorio();
+}
+
+/* ================= RED DE SEGURIDAD ================= */
+function renderRed(){
+  vista.innerHTML = `
+    <h2 class="sec">🤝 Red de Seguridad del Plantel</h2>
+    <div class="nota">Integrantes elegidos por la comunidad (con acta). Cada representante debe seguir en su cargo o tener hijas/os inscritos, según corresponda.</div>
+    <div class="card">
+      ${red.length===0 ? `<div class="empty">Aún no hay integrantes registrados.</div>` :
+      `<table><tr><th>Nombre</th><th>Cargo</th><th>Grupo</th><th>Contacto</th><th></th></tr>
+        ${red.map((r,i)=>`<tr><td>${esc(r.nombre)}</td><td>${esc(r.cargo)}</td><td>${esc(r.grupo)}</td><td>${esc(r.contacto)}</td>
+        <td><button class="btn-peligro" onclick="red.splice(${i},1);LS.set('red',red);renderRed()">✖</button></td></tr>`).join("")}
+      </table>`}
+    </div>
+    <div class="card">
+      <label>Nombre completo</label><input id="rNom">
+      <label>Cargo en la Red de Seguridad</label><input id="rCar" placeholder="Ej. Coordinadora, Presidente del comité...">
+      <label>Grupo que representa</label>
+      <select id="rGru">${GRUPOS.map(g=>`<option>${g}</option>`).join("")}</select>
+      <label>Contacto (teléfono / correo)</label><input id="rCon" inputmode="tel">
+      <button class="btn-g" onclick="agregarRed()">➕ Agregar integrante</button>
+    </div>`;
+}
+function agregarRed(){
+  const r = {nombre:$("#rNom").value.trim(), cargo:$("#rCar").value.trim(),
+             grupo:$("#rGru").value, contacto:$("#rCon").value.trim()};
+  if(!r.nombre || !r.contacto){ alert("Nombre y contacto son obligatorios."); return; }
+  red.push(r); LS.set("red", red); renderRed();
+}
+
+/* ================= CÉDULAS DEL ESTUDIANTE ================= */
+function renderCedulas(){
+  vista.innerHTML = `
+    <h2 class="sec">🪪 Cédula del Estudiante</h2>
+    <div class="card">
+      <label>Plantel</label><input id="cPlantel">
+      <label>Nombre del estudiante</label><input id="cNombre">
+      <label>Dirección</label><input id="cDir">
+      <label>Teléfono de contacto 1</label><input id="cT1" inputmode="tel">
+      <label>Teléfono de contacto 2</label><input id="cT2" inputmode="tel">
+      <label>Teléfono de contacto 3</label><input id="cT3" inputmode="tel">
+      <label>Padecimientos, alergias o enfermedades crónicas</label><input id="cPad">
+      <label>Medicamentos que toma de manera permanente</label><input id="cMed">
+      <label>Impedimentos</label><input id="cImp">
+      <label>Tipo de sangre</label>
+      <select id="cSangre">${["No sabe","O+","O-","A+","A-","B+","B-","AB+","AB-"].map(t=>`<option>${t}</option>`).join("")}</select>
+      <button class="btn-g" onclick="guardarCedula()">💾 Guardar cédula</button>
+    </div>
+    <h2 class="sec">Registros guardados (${cedulas.length})</h2>
+    <div class="card">
+      ${cedulas.length===0?`<div class="empty">Sin registros todavía.</div>`:
+      cedulas.map((c,i)=>`
+        <div class="tel-row">
+          <div class="num"><b>${esc(c.nombre)}</b>
+          <small>${esc(c.plantel)} · Sangre: ${esc(c.sangre)} · Alergias: ${esc(c.padecimientos)||"—"} · Med: ${esc(c.medicamentos)||"—"} · Tel: ${esc(c.tel1)}${c.tel2?", "+esc(c.tel2):""}${c.tel3?", "+esc(c.tel3):""}</small></div>
+          <button class="btn-peligro" onclick="cedulas.splice(${i},1);LS.set('ced',cedulas);renderCedulas()">✖</button>
+        </div>`).join("")}
+      ${cedulas.length?`<button class="btn-s" onclick="exportarCSV('cedulas')">⬇️ Exportar a CSV</button>`:""}
+    </div>`;
+}
+function guardarCedula(){
+  const v = id=>$("#"+id).value.trim();
+  if(!v("cNombre") || !v("cT1")){ alert("El nombre y al menos un teléfono son obligatorios."); return; }
+  cedulas.push({plantel:v("cPlantel"), nombre:v("cNombre"), direccion:v("cDir"),
+    tel1:v("cT1"), tel2:v("cT2"), tel3:v("cT3"), padecimientos:v("cPad"),
+    medicamentos:v("cMed"), impedimentos:v("cImp"), sangre:$("#cSangre").value});
+  LS.set("ced", cedulas); renderCedulas(); alert("✅ Cédula guardada.");
+}
+
+/* ================= BITÁCORA DE SEGURIDAD ================= */
+function renderBitacora(pre){
+  const hoy = new Date();
+  const f = hoy.toISOString().slice(0,10);
+  const h = String(hoy.getHours()).padStart(2,"0")+":"+String(hoy.getMinutes()).padStart(2,"0");
+  vista.innerHTML = `
+    <h2 class="sec">📋 Bitácora de Seguridad</h2>
+    <div class="card">
+      <label>Fecha</label><input type="date" id="bFecha" value="${f}">
+      <label>Hora</label><input type="time" id="bHora" value="${h}">
+      <label>Tipo de contingencia</label>
+      <select id="bTipo">${TIPOS.map(t=>`<option ${pre===t?"selected":""}>${t}</option>`).join("")}</select>
+      <label>Resumen breve de lo ocurrido y acciones tomadas</label>
+      <textarea id="bRes" rows="3"></textarea>
+      <button class="btn-g" onclick="guardarBit()">💾 Registrar en bitácora</button>
+    </div>
+    <h2 class="sec">Historial (${bitacora.length})</h2>
+    <div class="card">
+      ${bitacora.length===0?`<div class="empty">Sin eventos registrados.</div>`:
+      bitacora.slice().reverse().map((b,i)=>`
+        <div class="tel-row"><div class="num"><b>${esc(b.fecha)} ${esc(b.hora)}</b>
+        <small><span class="pill">${esc(b.tipo)}</span> ${esc(b.resumen)}</small></div>
+        <button class="btn-peligro" onclick="bitacora.splice(bitacora.length-1-${i},1);LS.set('bit',bitacora);renderBitacora()">✖</button></div>`).join("")}
+      ${bitacora.length?`<button class="btn-s" onclick="exportarCSV('bitacora')">⬇️ Exportar a CSV (reporte semestral)</button>`:""}
+    </div>`;
+}
+function guardarBit(){
+  const f=$("#bFecha").value, h=$("#bHora").value, t=$("#bTipo").value, r=$("#bRes").value.trim();
+  if(!f||!h||!r){ alert("Completa fecha, hora y resumen."); return; }
+  bitacora.push({fecha:f, hora:h, tipo:t, resumen:r});
+  LS.set("bit", bitacora); renderBitacora(); alert("✅ Evento registrado en la bitácora.");
+}
+
+/* ================= EXPORTAR CSV ================= */
+function exportarCSV(tipo){
+  let filas, nombre;
+  if(tipo==="cedulas"){
+    nombre="cedulas_estudiantes.csv";
+    filas=[["Plantel","Nombre","Direccion","Telefono1","Telefono2","Telefono3","Padecimientos/Alergias","Medicamentos","Impedimentos","TipoSangre"]];
+    cedulas.forEach(c=>filas.push([c.plantel,c.nombre,c.direccion,c.tel1,c.tel2,c.tel3,c.padecimientos,c.medicamentos,c.impedimentos,c.sangre]));
+  } else {
+    nombre="bitacora_seguridad.csv";
+    filas=[["Fecha","Hora","Tipo de contingencia","Resumen"]];
+    bitacora.forEach(b=>filas.push([b.fecha,b.hora,b.tipo,b.resumen]));
+  }
+  const csv = filas.map(f=>f.map(c=>'"'+String(c??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");
+  const blob = new Blob(["\uFEFF"+csv], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = nombre; a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function esc(s){ return String(s??"").replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
+
+/* ================= ARRANQUE ================= */
+pintarSemaforo();
+renderInicio();
+</script>
+</body>
+</html>
